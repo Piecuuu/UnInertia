@@ -2,4 +2,7 @@
 # Show additional information in server logs.
 debug = false
 # do not touch pls :)
-version = 2
+version = 3
+
+[mods]
+hiddenMods = []

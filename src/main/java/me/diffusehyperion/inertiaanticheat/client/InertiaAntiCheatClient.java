@@ -16,10 +16,12 @@ import java.util.Objects;
 public class InertiaAntiCheatClient implements ClientModInitializer {
     public static Toml clientConfig;
     public static final List<byte[]> allModData = new ArrayList<>();
+    public static List<String> hiddenMods;
 
     @Override
     public void onInitializeClient() {
         InertiaAntiCheatClient.clientConfig = InertiaAntiCheat.initializeConfig("/config/client/InertiaAntiCheat.toml", InertiaAntiCheatConstants.CURRENT_CLIENT_CONFIG_VERSION);
+        InertiaAntiCheatClient.hiddenMods = InertiaAntiCheatClient.clientConfig.getList("mods.hiddenMods");
 
         this.setupModDataList();
         ClientLoginModlistTransferHandler.init();
@@ -29,7 +31,7 @@ public class InertiaAntiCheatClient implements ClientModInitializer {
         try {
             File modDirectory = FabricLoader.getInstance().getGameDir().resolve("mods").toFile();
             for (File modFile : Objects.requireNonNull(modDirectory.listFiles())) {
-                if (modFile.isDirectory()) {
+                if (modFile.isDirectory() || InertiaAntiCheatClient.hiddenMods.contains(modFile.getName())) {
                     continue;
                 }
                 InertiaAntiCheatClient.allModData.add(Files.readAllBytes(modFile.toPath()));
